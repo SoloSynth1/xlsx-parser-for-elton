@@ -16,7 +16,8 @@ def parse_record(df, i):
     data_columns = [x for x in df.columns if 'Vendor' not in x]
     non_ep_columns = [x for x in data_columns if "EP" not in x]
     ep_columns = [x for x in data_columns if "EP" in x]
-    col_0 = [df.iloc[i]['Vendor'] for _ in range(len(non_ep_columns))]
+    vendor_name = df.iloc[i]['Vendor']
+    col_0 = [vendor_name for _ in range(len(non_ep_columns))]
     col_1 = non_ep_columns
     col_2 = [True if df.iloc[i][column] == "X" else False for column in non_ep_columns]
     col_3 = [True if df.iloc[i][column] == "X" else False for column in ep_columns]
@@ -29,8 +30,8 @@ def write_record(df, i, export_filename):
 
 
 def main(excel_path, export_filename, threads):
-    initialize(export_filename)
     df = pd.read_excel(excel_path)
+    initialize(export_filename)
     p = Pool(threads)
     p.starmap(write_record, [(df, i, export_filename) for i in range(len(df))])
 
